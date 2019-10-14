@@ -17,7 +17,7 @@ def Problem57(n: int):
 
     for i in range(1, n + 1):
         # Check if 1 + num/den = (num + den)/den satisfies the condition
-        if (euler.digit_count(num + den) > euler.digit_count(den)):
+        if (len(str(num + den)) > len(str(den))):
             count = count + 1
 
         # Calculate the next iteration, num*/den* = 1 / (2 + num / den)
