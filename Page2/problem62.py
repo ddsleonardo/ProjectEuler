@@ -49,7 +49,7 @@ def Problem62(n: int):
     # Initialise some numbers
     start_time = time.time()
     digits = 1
-    cubes = []
+    cubes = {}
     permutations = []
 
     if (n == 1):
@@ -61,9 +61,9 @@ def Problem62(n: int):
 
         # If we hit a number with more digits than the previous, we can reset the problem
         if (len(str(new_cube)) > digits):
-            cubes = []
+            cubes = {}
             permutations = []
-            digits += len(str(cube))
+            digits += len(str(new_cube))
 
         found_permutation = False
         # First of all, let's try to find a permutation in the existing permutation groups
@@ -77,19 +77,27 @@ def Problem62(n: int):
 
         # If we didn't find any permutations so far, we search for one amongst the so far unused cubes
         if (not found_permutation):
-            for cube in cubes:
-                # If we find a permutation, we insert the new pair in the permutations list
-                # We also remove the cube from the singles collection, for we don't need to check it again
-                if (is_permutation(new_cube, cube)):
-                    found_permutation = True
-                    permutations.append([cube, new_cube])
-                    cubes.remove(cube)
-                    # In the special case where n is 2, the first found permutation gives us the result
-                    if (n == 2):
-                        return cube, '%.3f s' % (time.time() - start_time)
+            # cubes is a dict where values are grouped by a key which is the digit sum
+            # this is useful because all candidate permutations will necessary have equal digit sum
+            key = sum_digits(new_cube)
+            if (key in cubes):
+                for cube in cubes[key]:
+                    # If we find a permutation, we insert the new pair in the permutations list
+                    # We also remove the cube from the singles collection, for we don't need to check it again
+                    if (is_permutation(new_cube, cube)):
+                        found_permutation = True
+                        permutations.append([cube, new_cube])
+                        cubes[key].remove(cube)
+                        # In the special case where n is 2, the first found permutation gives us the result
+                        if (n == 2):
+                            return cube, '%.3f s' % (time.time() - start_time)
 
-        # If no permutations were found, we add this to the singles list
-        if (not found_permutation):
-            cubes.append(new_cube)
+                #If no permutations were found, we add this to the singles list
+                if (not found_permutation):
+                    cubes[key].append(new_cube)
+
+            else:
+                cubes[key] = []
+                cubes[key].append(new_cube)
 
         i = i + 1
