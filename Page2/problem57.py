@@ -9,9 +9,9 @@ def Problem57(n: int):
     ''' For a positive integer n, returns the count
         of iterations, from 1 to n, where the numerator
         exceeds the denominator in number of digits'''
-    start_time = time.time()
 
-    # Initialise count and initial fraction    
+    # Initialise count and initial fraction
+    start_time = time.time()
     count = 0
     num, den = 1, 2
 
@@ -23,4 +23,5 @@ def Problem57(n: int):
         # Calculate the next iteration, num*/den* = 1 / (2 + num / den)
         num, den = den, (num + 2 * den)
 
+    # Return result and time elapsed
     return count, '%.3f s' % (time.time() - start_time)
