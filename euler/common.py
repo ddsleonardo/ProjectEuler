@@ -1,6 +1,6 @@
 import math
 
-def is_prime(n: int):
+def is_prime(n: int, p_list: list = []):
     ''' For a given integer n, returns true if
         n is a prime number '''
 
@@ -10,28 +10,41 @@ def is_prime(n: int):
     if (n % 2 == 0 or n % 3 == 0):
         return False
 
-    div = 5
+    if (len(p_list) == 0):
+        div = 5
 
-    while (div * div <= n):
-        if (n % div == 0 or n % (div + 2) == 0):
-            return False
-        div += 6
+        while (div * div <= n):
+            if (n % div == 0 or n % (div + 2) == 0):
+                return False
+            div += 6
+    else:
+        i = 0
+        while (p_list[i] * p_list[i] <= n):
+            if (n % p_list[i] == 0):
+                return False;
+
+            i += 1
 
     return True
 
-def next_prime(n: int):
+def next_prime(n: int, p_list: list = []):
     ''' Returns the smallest prime
     that is greater than n'''
+    if (n < 2):
+        return 2
 
-    if (n % 6 == 5 and is_prime(n + 2)):
+    if (n == 2):
+        return 3
+
+    if (n % 6 == 5 and is_prime(n + 2, p_list)):
         return n + 2
 
     n += 1
     n += (5 - n % 6)
     while True:
-        if (is_prime(n)):
+        if (is_prime(n, p_list)):
             return n
-        if (is_prime(n + 2)):
+        if (is_prime(n + 2, p_list)):
             return n + 2
 
         n += 6
